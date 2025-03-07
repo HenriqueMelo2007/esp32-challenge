@@ -8,7 +8,7 @@ bool deviceIsPresent = false;
 void setup()
 {
   Serial.begin(115200);
-  Serial.printf("Iniciando setup...\n");
+  Serial.println("Iniciando setup...");
 
   NimBLEDevice::init("");
   NimBLEScan* scan = NimBLEDevice::getScan();
@@ -22,10 +22,11 @@ void setup()
     int comparing = strcmp(addresString, MAC_ADDRESS);
 
     if (comparing == 0) {
-      Serial.printf("*** TAG encontrada ***\n");
+      Serial.println("*** TAG encontrada ***");
       Serial.printf("Endereço MAC: %s\n", addresString);
-      Serial.printf("***************\n");
+      Serial.println("***************");
 
+      deviceIsPresent = true;
     } else {
       Serial.printf("Dispositivo qualquer encontrado. Endereço MAC: %s\n", addresString);
     }
@@ -36,6 +37,5 @@ void setup()
 
 void loop()
 {
-  Serial.printf("Loop\n");
-  delay(15000);
+  
 }
