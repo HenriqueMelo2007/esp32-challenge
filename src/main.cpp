@@ -17,11 +17,20 @@ void setup()
   for (int i = 0; i < scanResult.getCount(); i++) {
     const NimBLEAdvertisedDevice* specificDevice = scanResult.getDevice(i);
     NimBLEAddress specificMacAddress = specificDevice->getAddress();
+    const char* addresString = specificMacAddress.toString().c_str();
 
-    printf("Novo dispositivo encontrado! Endereço MAC: %s\n", specificMacAddress.toString().c_str());
+    int comparing = strcmp(addresString, MAC_ADDRESS);
+
+    if (comparing == 0) {
+      Serial.printf("*** TAG encontrada ***");
+      Serial.printf("Endereço MAC: %s", addresString);
+      Serial.printf("***************");
+    } else {
+      Serial.printf("Dispositivo qualquer encontrado. Endereço MAC: %s", addresString);
+    }
   }
 
-  printf("Finalizando setup...\n");
+  printf("Setup finalizado.\n");
 }
 
 void loop()
