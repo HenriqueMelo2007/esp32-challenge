@@ -22,11 +22,12 @@ void setup()
     int comparing = strcmp(addresString, MAC_ADDRESS);
 
     if (comparing == 0) {
-      Serial.printf("*** TAG encontrada ***");
-      Serial.printf("Endereço MAC: %s", addresString);
-      Serial.printf("***************");
+      Serial.printf("*** TAG encontrada ***\n");
+      Serial.printf("Endereço MAC: %s\n", addresString);
+      Serial.printf("***************\n");
+
     } else {
-      Serial.printf("Dispositivo qualquer encontrado. Endereço MAC: %s", addresString);
+      Serial.printf("Dispositivo qualquer encontrado. Endereço MAC: %s\n", addresString);
     }
   }
 
@@ -36,5 +37,5 @@ void setup()
 void loop()
 {
   Serial.printf("Loop\n");
-  delay(5000);
+  delay(15000);
 }
