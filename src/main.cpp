@@ -5,7 +5,8 @@
 #define GREEN_LED 15
 
 #define SCANNING_TIME 5
-#define MAC_ADDRESS "ff:ff:11:1f:7d:a2"
+#define MAC_ADDRESS_ONE "ff:ff:11:1f:7d:a2"
+#define MAC_ADDRESS_TWO "ff:ff:11:1f:26:53"
 
 bool scanning();
 
@@ -21,7 +22,9 @@ void loop()
 {
   if (scanning())
   {
-    Serial.print("");
+    digitalWrite(GREEN_LED, HIGH);
+  } else {
+    digitalWrite(GREEN_LED, LOW);
   }
 }
 
@@ -37,15 +40,18 @@ bool scanning()
     NimBLEAddress specificMacAddress = specificDevice->getAddress();
     const char *addresString = specificMacAddress.toString().c_str();
 
-    int comparing = strcmp(addresString, MAC_ADDRESS);
+    int comparingOne = strcmp(addresString, MAC_ADDRESS_ONE);
+    int comparingTwo = strcmp(addresString, MAC_ADDRESS_TWO);
 
-    if (comparing == 0)
+    if (comparingOne == 0 || comparingTwo == 0)
     {
       Serial.println("*** TAG encontrada ***");
 
       return true;
     }
   }
+
+  Serial.println("*** TAG não encontrada ***");
 
   return false;
 }
