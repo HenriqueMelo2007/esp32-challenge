@@ -14,31 +14,31 @@ void setup()
 
 void loop()
 {
-  if(scanning()) {
+  if (scanning())
+  {
     Serial.print("");
   }
 }
 
-bool scanning() {
-  NimBLEScan* scan = NimBLEDevice::getScan();
+bool scanning()
+{
+  NimBLEScan *scan = NimBLEDevice::getScan();
   NimBLEScanResults scanResult = scan->getResults(SCANNING_TIME * 1000);
 
-  for (int i = 0; i < scanResult.getCount(); i++) {
-    const NimBLEAdvertisedDevice* specificDevice = scanResult.getDevice(i);
+  for (int i = 0; i < scanResult.getCount(); i++)
+  {
+    const NimBLEAdvertisedDevice *specificDevice = scanResult.getDevice(i);
 
     NimBLEAddress specificMacAddress = specificDevice->getAddress();
-    const char* addresString = specificMacAddress.toString().c_str();
+    const char *addresString = specificMacAddress.toString().c_str();
 
     int comparing = strcmp(addresString, MAC_ADDRESS);
 
-    if (comparing == 0) {
+    if (comparing == 0)
+    {
       Serial.println("*** TAG encontrada ***");
-      Serial.printf("Endereço MAC: %s\n", addresString);
-      Serial.println("***************");
 
       return true;
-    } else {
-      Serial.printf("Dispositivo qualquer encontrado. Endereço MAC: %s\n", addresString);
     }
   }
 
