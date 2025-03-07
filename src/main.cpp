@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include "NimBLEDevice.h"
-#include "NimBLEAddress.h"
+
+#define MAC_ADDRESS "ff:ff:11:1f:7d:a2"
+
+bool deviceIsPresent = false;
 
 void setup()
 {
@@ -8,8 +11,17 @@ void setup()
   Serial.printf("Iniciando setup...\n");
 
   NimBLEDevice::init("");
+  NimBLEScan* scan = NimBLEDevice::getScan();
+  NimBLEScanResults scanResult = scan->getResults(5 * 1000);
+  
+  for (int i = 0; i < scanResult.getCount(); i++) {
+    const NimBLEAdvertisedDevice* specificDevice = scanResult.getDevice(i);
+    NimBLEAddress specificMacAddress = specificDevice->getAddress();
 
-  Serial.printf("Setup finalizado!\n");
+    printf("Novo dispositivo encontrado! Endereço MAC: %s\n", specificMacAddress.toString().c_str());
+  }
+
+  printf("Finalizando setup...\n");
 }
 
 void loop()
