@@ -14,7 +14,6 @@ bool scanning();
 void scanningTask(void *parameter);
 void blinkRedLED(int onTime, int offTime);
 
-
 void setup()
 {
   Serial.begin(115200);
