@@ -10,24 +10,24 @@
 
 ## Sumário
 - [Visão geral](#visão-geral)
-- [Software](#software)
 - [Hardware](#hardware)
+- [Software](#software)
 - [Processo de desenvolvimento](#processo-de-desenvolvimento)
 - [Como utilizar no seu ESP32 (clonagem de repositório)](#como-utilizar-no-seu-esp32-clonagem-de-repositório)
 
 ## Visão geral
 
+O desafio proposto envolveu o desenvolvimento de um firmware para o módulo ESP32-S3-WROOM-1, com a missão de atuar como um monitor de tags BLE específicas. O sistema foi idealizado para detectar continuamente os dispositivos BLE desejados próximos e, com base na presença ou ausência das tags, acionar indicadores luminosos (LEDs) de forma dinâmica.
 
-## Software
-
+A solução implementada combina diversas tecnologias. Foi utilizada a IDE PlatformIO, integrada ao VScode, com o framework Arduino como base de desenvolvimento. A aplicação utiliza a biblioteca NimBLE-Arduino para gerenciar as conexões BLE e o FreeRTOS para a execução de tarefas em paralelo, garantindo um escaneamento contínuo dos dispositivos e alta responsividade dos LEDs ao resultado do escaneamento.
 
 ## Hardware
+
+
+## Software
 
 
 ## Processo de desenvolvimento
 
 
 ## Como utilizar no seu ESP32 (clonagem de repositório)
-
-
-
