@@ -4,7 +4,7 @@
 #define RED_LED 13
 #define GREEN_LED 15
 
-#define SCANNING_TIME 2
+#define SCANNING_TIME 4
 #define MAC_ADDRESS_ONE "ff:ff:11:1f:7d:a2" 
 #define MAC_ADDRESS_TWO "ff:ff:11:1f:26:53"
 
