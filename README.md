@@ -13,7 +13,7 @@
 - [Hardware](#hardware)
 - [Software](#software)
 - [Processo de desenvolvimento](#processo-de-desenvolvimento)
-- [Como utilizar no seu ESP32 (clonagem de repositório)](#como-utilizar-no-seu-esp32-clonagem-de-repositório)
+- [Referências)](#referências)
 
 ## Visão geral
 
@@ -264,4 +264,4 @@ Esta função é responsável por controlar o piscar do LED vermelho sem bloquea
 
 ## Processo de desenvolvimento
 
-## Como utilizar no seu ESP32 (clonagem de repositório)
+## Referências
