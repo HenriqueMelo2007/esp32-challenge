@@ -1,4 +1,4 @@
-# Desafio de Desenvolvimento de Firmware – ESP32-S3 com cliente BLE
+# Desafio de Desenvolvimento de Firmware – ESP32
 
 ## Sumário
 
@@ -12,4 +12,3 @@
 
 ## Como utilizar no seu ESP32 ( clonagem de repositório )
 
-## Aplicações reais
