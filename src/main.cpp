@@ -11,8 +11,9 @@
 volatile bool tagFound = false;
 
 bool scanning();
-void blinkRedLED(int onTime, int offTime);
 void scanningTask(void *parameter);
+void blinkRedLED(int onTime, int offTime);
+
 
 void setup()
 {
@@ -68,10 +69,32 @@ void scanningTask(void *parameter)
   }
 }
 
-void blinkRedLED(int onTime, int offTime)
+inline void blinkRedLED(int onTime, int offTime)
 {
-  digitalWrite(RED_LED, HIGH);
-  delay(onTime);
-  digitalWrite(RED_LED, LOW);
-  delay(offTime);
+  static unsigned long previousMillis = 0;
+  static int ledState = LOW;
+  unsigned long currentMillis = millis();
+
+  if (previousMillis == 0)
+  {
+    digitalWrite(RED_LED, HIGH);
+    ledState = HIGH;
+    previousMillis = currentMillis;
+    return;
+  }
+
+  unsigned long elapsed = currentMillis - previousMillis;
+
+  if (ledState == HIGH && elapsed >= onTime)
+  {
+    digitalWrite(RED_LED, LOW);
+    ledState = LOW;
+    previousMillis = currentMillis;
+  }
+  else if (ledState == LOW && elapsed >= offTime)
+  {
+    digitalWrite(RED_LED, HIGH);
+    ledState = HIGH;
+    previousMillis = currentMillis;
+  }
 }
