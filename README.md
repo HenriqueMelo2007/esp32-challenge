@@ -6,10 +6,7 @@
 
 # Desafio de Desenvolvimento de Firmware – ESP32
 
-
-<p align="center">
-  <img src="https://www.espressif.com/sites/default/files/banner/esp32-modules-banner1-new.jpg" alt="ESP32 Logo" height="350" width="1000">
-</p>
+![ESP32 microcontroller](https://www.espressif.com/sites/default/files/banner/esp32-modules-banner1-new.jpg)
 
 ## Sumário
 - [Visão geral](#visão-geral)
