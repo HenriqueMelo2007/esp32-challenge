@@ -23,6 +23,33 @@ A solução implementada combina diversas tecnologias. Foi utilizada a IDE Platf
 
 ## Hardware
 
+- **ESP32-S3-WROOM-1**
+
+> Função: Atua como o microcontrolador central, responsável por executar o firmware, gerenciar a comunicação BLE, processar os dados recebidos e controlar os LEDs conforme a lógica implementada.
+
+- **Cabo USB**
+
+> Função: Permite a comunicação entre o computador e o ESP32, facilitando a programação, depuração e fornecimento de energia ao dispositivo durante o desenvolvimento.
+
+- **Tags BLE**
+
+> Função: Servem como os dispositivos de referência monitorados pelo firmware. A detecção das tags é o gatilho para a mudança no comportamento dos indicadores luminosos (LEDs).
+
+- **Protoboard**
+
+> Função: Fornece uma plataforma de prototipagem para a montagem e testes do circuito, permitindo conexões rápidas e seguras entre os componentes sem a necessidade de solda.
+
+- **LEDs (verde e vermelho)**
+
+> Função: Funcionam como indicadores visuais do estado do sistema. O LED verde acende continuamente quando uma tag é detectada, enquanto o LED vermelho pisca para indicar a ausência das tags monitoradas.
+
+- **Resistores de 220 ohms**
+
+> Função: Limitam a corrente que passa pelos LEDs, protegendo-os contra sobrecargas e garantindo um funcionamento seguro e prolongado dos indicadores luminosos.
+
+- **Jumpers macho-fêmea**
+
+> Função: Realizam as conexões necessárias entre o ESP32 e os demais componentes na protoboard. Um jumper é utilizado para conectar o GND do ESP32 à protoboard, enquanto os outros dois conectam os pinos GPIO 13 (LED vermelho) e GPIO 15 (LED verde), permitindo o controle individual dos LEDs.
 
 ## Software
 
