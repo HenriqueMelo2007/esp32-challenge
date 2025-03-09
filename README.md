@@ -1,6 +1,5 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/HenriqueMelo2007/esp32-challenge)
 ![Commits](https://img.shields.io/github/commit-activity/y/HenriqueMelo2007/esp32-challenge)
-![Last commit](https://img.shields.io/github/last-commit/HenriqueMelo2007/esp32-challenge)
 ![Repository size](https://img.shields.io/github/repo-size/HenriqueMelo2007/esp32-challenge)
 
 # Desafio de Desenvolvimento de Firmware – ESP32
@@ -278,3 +277,9 @@ Esta função é responsável por controlar o piscar do LED vermelho sem bloquea
 - **Arduino Framework ( [https://docs.arduino.cc/programming/](https://docs.arduino.cc/programming/) )**
 - **NimBLE-Arduino ( [https://github.com/h2zero/NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) )**
 - **C Programming Language( [https://devdocs.io/c/](https://devdocs.io/c/) )**
+
+### Outros
+
+- **ISearching( [https://play.google.com/store/apps/details?id=com.findn.isearching&hl=pt-BR&pli=1](https://play.google.com/store/apps/details?id=com.findn.isearching&hl=pt-BR&pli=1) )**
+- **NRF Connect( [https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=pt-br](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=pt-br) )**
+- **Artigo sobre como utilizar Conventional Commits Pattern( [https://medium.com/linkapi-solutions/conventional-commits-pattern-3778d1a1e657](https://medium.com/linkapi-solutions/conventional-commits-pattern-3778d1a1e657) )**
