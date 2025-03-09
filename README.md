@@ -263,7 +263,23 @@ Esta função é responsável por controlar o piscar do LED vermelho sem bloquea
 
 ## Processo de desenvolvimento
 
+Familiarização com as tags BLE. Meu primeiro passo foi entender como utilizá-las e descobrir quais informações eram necessárias para a interação proposta entre o microcontrolador e os dispositivos. Segui a instrução da embalagem das TAGs e fiz o download do aplicativo iSearching no meu celular para ter as primeiras impressões sobre o uso das TAGs. Após um breve teste utilizando o aplicativo recomendado, busquei meios de obter os endereços MAC das TAGs de forma eficiente. Instalei, então, no meu celular o aplicativo nRF Connect para obtenção dos endereços através de um scan rápido. Após isso, escolhi qual biblioteca utilizar para o gerenciamento das funcionalidades Bluetooth.
 
+Com os endereços "em mãos" e as ferramentas para escrita do código definidas, busquei estruturar em meu caderno as informações mais importantes do projeto e quais tarefas o código deveria ser capaz de executar. Dessa forma, pude desenvolver o código de maneira clara e sequencial. Durante o versionamento do código no GitHub, através do Git, foram utilizados commits padronizados conhecidos como "Conventional Commits" para esclarecer as mudanças implementadas. A maior parte do tempo dedicado ao desenvolvimento do desafio foi empregada na leitura da documentação da biblioteca NimBLE-Arduino, para que fosse possível utilizá-la adequadamente.
+
+### Uso da inteligência artificial generativa
+
+- Revisão e refatoração de código
+
+**Durante a codificação consultei os agentes de IA para revisão do meu código. Verificação de erros e possíveis melhorias.**
+
+- Criação deste README
+
+**As seções [Hardware](#hardware) e [Software](#software) deste documento foram feitas com auxílio dos agentes de IA.**
+
+- Pesquisas curtas
+
+**Dúvidas simples e diretas cujo uma pesquisa no Google ou na própria documentação levariam mais tempo foram feitas através dos agentes de IA.**
 
 ## Referências
 
