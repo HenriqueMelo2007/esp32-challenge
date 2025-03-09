@@ -13,7 +13,7 @@
 - [Hardware](#hardware)
 - [Software](#software)
 - [Processo de desenvolvimento](#processo-de-desenvolvimento)
-- [Referências)](#referências)
+- [Referências](#referências)
 
 ## Visão geral
 
@@ -264,4 +264,17 @@ Esta função é responsável por controlar o piscar do LED vermelho sem bloquea
 
 ## Processo de desenvolvimento
 
+
+
 ## Referências
+
+### Inteligências artificiais generativas
+
+- **ChatGPT( [https://chatgpt.com/](https://chatgpt.com/) )**
+- **DeepSeek( [https://chat.deepseek.com/](https://chat.deepseek.com/) )**
+
+### Documentações
+
+- **Arduino Framework ( [https://docs.arduino.cc/programming/](https://docs.arduino.cc/programming/) )**
+- **NimBLE-Arduino ( [https://github.com/h2zero/NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) )**
+- **C Programming Language( [https://devdocs.io/c/](https://devdocs.io/c/) )**
