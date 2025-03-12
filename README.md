@@ -287,7 +287,7 @@ Com os endereços "em mãos" e as ferramentas para escrita do código definidas,
 - **Arduino Framework ( [https://docs.arduino.cc/programming/](https://docs.arduino.cc/programming/) )**
 - **NimBLE-Arduino ( [https://github.com/h2zero/NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) )**
 - **C Programming Language( [https://devdocs.io/c/](https://devdocs.io/c/) )**
-- \*\*FastLED ( [https://github.com/FastLED/FastLED](https://github.com/FastLED/FastLED) )
+- **FastLED ( [https://github.com/FastLED/FastLED](https://github.com/FastLED/FastLED) )**
 
 ### Outros
 
