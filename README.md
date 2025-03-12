@@ -18,13 +18,13 @@
 
 O desafio proposto envolveu o desenvolvimento de um firmware para o módulo ESP32-S3-WROOM-1, com a missão de atuar como um monitor de tags BLE específicas. O sistema foi idealizado para detectar continuamente os dispositivos BLE desejados próximos e, com base na presença ou ausência das tags, acionar indicadores luminosos (LEDs) de forma dinâmica.
 
-A solução implementada combina diversas tecnologias. Foi utilizada a IDE PlatformIO, integrada ao VScode, com o framework Arduino como base de desenvolvimento. A aplicação utiliza a biblioteca NimBLE-Arduino para gerenciar as conexões BLE e o FreeRTOS para a execução de tarefas em paralelo, garantindo um escaneamento contínuo dos dispositivos e alta responsividade dos LEDs ao resultado do escaneamento.
+A solução implementada combina diversas tecnologias. Foi utilizada a IDE PlatformIO, integrada ao VScode, com o framework Arduino como base de desenvolvimento. A aplicação utiliza a biblioteca NimBLE-Arduino para gerenciar as conexões BLE, a biblioteca FastLED para controle do LED RGB endereçável da placa e o FreeRTOS para a execução de tarefas em paralelo, garantindo um escaneamento contínuo dos dispositivos e alta responsividade dos LEDs ao resultado do escaneamento.
 
 ## Hardware
 
 - **ESP32-S3-WROOM-1**
 
-> Função: Atua como o microcontrolador central, responsável por executar o firmware, gerenciar a comunicação BLE, processar os dados recebidos e controlar os LEDs conforme a lógica implementada.
+> Função: Atua como o microcontrolador central, responsável por executar o firmware, gerenciar a comunicação BLE, processar os dados recebidos e controlar o LED RGB conforme a lógica implementada.
 
 - **Cabo USB**
 
@@ -34,82 +34,72 @@ A solução implementada combina diversas tecnologias. Foi utilizada a IDE Platf
 
 > Função: Servem como os dispositivos de referência monitorados pelo firmware. A detecção das tags é o gatilho para a mudança no comportamento dos indicadores luminosos (LEDs).
 
-- **Protoboard**
-
-> Função: Fornece uma plataforma de prototipagem para a montagem e testes do circuito, permitindo conexões rápidas e seguras entre os componentes sem a necessidade de solda.
-
-- **LEDs (verde e vermelho)**
-
-> Função: Funcionam como indicadores visuais do estado do sistema. O LED verde acende continuamente quando uma tag é detectada, enquanto o LED vermelho pisca para indicar a ausência das tags monitoradas.
-
-- **Resistores de 220 ohms**
-
-> Função: Limitam a corrente que passa pelos LEDs, protegendo-os contra sobrecargas e garantindo um funcionamento seguro e prolongado dos indicadores luminosos.
-
-- **Jumpers macho-fêmea**
-
-> Função: Realizam as conexões necessárias entre o ESP32 e os demais componentes na protoboard. Um jumper é utilizado para conectar o GND do ESP32 à protoboard, enquanto os outros dois conectam os pinos GPIO 13 (LED vermelho) e GPIO 15 (LED verde), permitindo o controle individual dos LEDs.
-
 ## Software
 
 ### **Nesta seção, detalharemos cada trecho do código desenvolvido para atender ao desafio. Cada trecho de código é apresentado em blocos, seguido de uma análise sobre seu funcionamento.**
 
 > Intervalos de linhas descartadas entre os trechos explicados correspondem a espaços em brancos
 
-### Trecho 1: Inclusão das Bibliotecas e Definição dos Macros (linhas 1 a 9)
+### Trecho 1: Inclusão das Bibliotecas e Definição dos Macros (linhas 1 a 11)
 
-```
+```cpp
 #include <Arduino.h>
 #include "NimBLEDevice.h"
+#include <FastLED.h>
 
-#define RED_LED 13
-#define GREEN_LED 15
+#define NUM_LEDS 1
+#define DATA_PIN 38
 
-#define SCANNING_TIME 2
+#define SCANNING_TIME 5
 #define MAC_ADDRESS_ONE "ff:ff:11:1f:7d:a2"
 #define MAC_ADDRESS_TWO "ff:ff:11:1f:26:53"
+
+CRGB leds[NUM_LEDS];
 ```
 
 - Arduino.h: Fornece as definições básicas, funções e estruturas do framework Arduino.
 - NimBLEDevice.h: Biblioteca específica para manipulação de conexões BLE.
+- FastLED.h: Biblioteca para controle de LEDs endereçáveis.
 
 Em seguida, são definidos macros que padronizam constantes utilizadas em todo o código:
 
-- RED_LED e GREEN_LED: Associam os pinos GPIO (13 e 15, respectivamente) aos LEDs de indicação.
+- NUM_LEDS e DATA_PIN: Configuram a quantidade de LEDs e o pino de dados para a fita NeoPixel.
 - SCANNING_TIME: Define o tempo de escaneamento (em segundos) para a busca de dispositivos BLE.
 - MAC_ADDRESS_ONE e MAC_ADDRESS_TWO: Armazenam os endereços MAC das tags BLE que o firmware deverá monitorar.
+- leds[]: Array para armazenar o estado dos LEDs NeoPixel.
 
-### Trecho 2: Declaração da Variável Global tagFound (linha 11)
+### Trecho 2: Declaração da Variável Global tagFound (linha 13)
 
-`volatile bool tagFound = false;`
+```cpp
+volatile bool tagFound = false;
+```
 
 - tagFound serve para armazenar o resultado do escaneamento BLE, indicando se alguma das tags monitoradas foi detectada.
 
-### Trecho 3: Protótipos das Funções Utilizadas (linhas 13 a 15)
+### Trecho 3: Protótipos das Funções Utilizadas (linhas 15 a 17)
 
-```
+```cpp
 bool scanning();
 void scanningTask(void *parameter);
-void blinkRedLED(int onTime, int offTime);
+void blinkRedLED(int onTime, int offTime);`
 ```
 
 Aqui, são declarados os protótipos das funções que compõem a aplicação, garantindo que o compilador conheça suas assinaturas antes de serem utilizadas:
 
 - scanning(): Responsável por realizar o escaneamento dos dispositivos BLE próximos e identificar se alguma tag monitorada está presente.
 - scanningTask(void \*parameter): Função que será executada como uma tarefa do FreeRTOS, permitindo o escaneamento contínuo em paralelo com o loop principal.
-- blinkRedLED(int onTime, int offTime): Gerencia o comportamento de piscar o LED vermelho de forma não bloqueante, utilizando os tempos de acendimento e apagamento definidos.
+- blinkRedLED(int onTime, int offTime): Gerencia o comportamento de piscar o LED vermelho de forma não bloqueante utilizando a biblioteca FastLED.
 
-### Trecho 4: Configuração Inicial no setup() (linhas 19 a 24)
+### Trecho 4: Configuração Inicial no setup() (linhas 19 a 25)
 
-```
+```cpp
 void setup()
 {
-  Serial.begin(115200);
-  NimBLEDevice::init("");
-  pinMode(RED_LED, OUTPUT);
-  pinMode(GREEN_LED, OUTPUT);
+Serial.begin(115200);
+NimBLEDevice::init("");
+FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
 
-  xTaskCreate(scanningTask, "ScanningTask", 4096, NULL, 1, NULL);
+xTaskCreate(scanningTask, "ScanningTask", 4096, NULL, 1, NULL);
 }
 ```
 
@@ -121,57 +111,58 @@ Esta função é executada uma única vez na inicialização do firmware e reali
 
 - Inicialização do BLE:
 
-  > NimBLEDevice::init(""); inicializa a biblioteca NimBLE, preparando o dispositivo para operações de escaneamento e conexão BLE.
+  > NimBLEDevice::init(""); inicializa a biblioteca NimBLE, preparando o dispositivo para operações de escaneamento BLE.
 
-- Configuração dos Pinos:
+- Configuração dos LEDs NeoPixel:
 
-  > pinMode(RED_LED, OUTPUT); e pinMode(GREEN_LED, OUTPUT); definem os pinos responsáveis pelos LEDs como saída, garantindo o controle correto do estado dos indicadores.
+  > FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS); define o tipo e pino de controle dos LEDs endereçáveis.
 
 - Criação da Tarefa FreeRTOS:
   > xTaskCreate(scanningTask, "ScanningTask", 4096, NULL, 1, NULL); cria uma tarefa separada para o escaneamento BLE. Utilizar o FreeRTOS permite que o escaneamento seja executado de forma paralela ao loop principal, melhorando a responsividade do sistema.
 
-### Trecho 5: Loop Principal do Programa (linhas 29 a 38)
+### Trecho 5: Loop Principal do Programa (linhas 27 a 36)
 
-```
+```cpp
 void loop()
 {
-  if (tagFound)
-  {
-    digitalWrite(GREEN_LED, HIGH);
-    digitalWrite(RED_LED, LOW);
-  }
-  else
-  {
-    digitalWrite(GREEN_LED, LOW);
-    blinkRedLED(500, 500);
-  }
+if (tagFound)
+{
+leds[0] = CRGB::Green;
+FastLED.show();
+}
+else
+{
+blinkRedLED(500, 500);
+}
 }
 ```
 
-- O loop principal é responsável por monitorar constantemente o estado da variável tagFound e atualizar os LEDs de acordo
+- O loop principal monitora constantemente o estado da variável tagFound e atualiza os LEDs NeoPixel de acordo:
+- Se tagFound for true: Atribui cor verde ao LED e atualiza o hardware.
+- Se tagFound for false: Aciona o padrão de piscar vermelho através da função blinkRedLED().
 
-### Trecho 6: Função scanning() – Escaneamento de Dispositivos BLE (linhas 41 a 60)
+### Trecho 6: Função scanning() – Escaneamento de Dispositivos BLE (linhas 38 a 57)
 
-```
+```cpp
 bool scanning()
 {
-  NimBLEScan *scan = NimBLEDevice::getScan();
-  NimBLEScanResults scanResult = scan->getResults(SCANNING_TIME * 1000);
+NimBLEScan *scan = NimBLEDevice::getScan();
+NimBLEScanResults scanResult = scan->getResults(SCANNING_TIME * 1000);
 
-  for (int i = 0; i < scanResult.getCount(); i++)
-  {
-    const NimBLEAdvertisedDevice *specificDevice = scanResult.getDevice(i);
-    NimBLEAddress specificMacAddress = specificDevice->getAddress();
-    const char *addressString = specificMacAddress.toString().c_str();
+for (int i = 0; i < scanResult.getCount(); i++)
+{
+const NimBLEAdvertisedDevice *specificDevice = scanResult.getDevice(i);
+NimBLEAddress specificMacAddress = specificDevice->getAddress();
+const char *addressString = specificMacAddress.toString().c_str();
 
-    if (strcmp(addressString, MAC_ADDRESS_ONE) == 0 || strcmp(addressString, MAC_ADDRESS_TWO) == 0)
-    {
-      Serial.println("*** TAG encontrada ***");
-      return true;
-    }
-  }
-  Serial.println("*** TAG não encontrada ***");
-  return false;
+if (strcmp(addressString, MAC_ADDRESS_ONE) == 0 || strcmp(addressString, MAC_ADDRESS_TWO) == 0)
+{
+  Serial.println("*** TAG encontrada ***");
+  return true;
+}
+}
+Serial.println("*** TAG não encontrada ***");
+return false;
 }
 ```
 
@@ -190,16 +181,16 @@ Esta função é o coração do monitoramento BLE:
 - Verificação e Retorno:
   A função utiliza strcmp() para comparar o endereço do dispositivo com os dois endereços definidos nos macros. Se houver correspondência, o firmware imprime uma mensagem de sucesso e retorna true, indicando que uma tag foi encontrada. Caso contrário, após a iteração, imprime que nenhuma tag foi detectada e retorna false.
 
-### Trecho 7: Função scanningTask() – Tarefa do FreeRTOS para Escaneamento Contínuo (linhas 62 a 69)
+### Trecho 7: Função scanningTask() – Tarefa do FreeRTOS para Escaneamento Contínuo (linhas 59 a 66)
 
-```
+```cpp
 void scanningTask(void *parameter)
 {
-  while (true)
-  {
-    tagFound = scanning();
-    vTaskDelay(10 / portTICK_PERIOD_MS);
-  }
+while (true)
+{
+tagFound = scanning();
+vTaskDelay(10 / portTICK_PERIOD_MS);
+}
 }
 ```
 
@@ -207,59 +198,62 @@ Esta função é projetada para ser executada em uma tarefa separada do FreeRTOS
 
 - Loop Infinito:
   A estrutura while (true) assegura que o escaneamento seja realizado repetidamente.
+
 - Atualização da Variável Global:
   A cada iteração, o resultado do escaneamento (true ou false) é atribuído à variável tagFound, atualizando o estado para que o loop principal possa reagir adequadamente.
+
 - Atraso Controlado:
-  vTaskDelay(10 / portTICK_PERIOD_MS); introduz uma breve pausa de 10 milissegundos entre os escaneamentos, evitando sobrecarga do processador e garantindo que outras tarefas possam ser executadas sem interferência.
+  vTaskDelay(10 / portTICK_PERIOD_MS); introduz uma breve pausa de 10 milissegundos entre os escaneamentos, evitando sobrecarga do processador.
 
-### Trecho 8: Função blinkRedLED() – Controle Não Bloqueante do LED Vermelho (linhas 71 a 99)
+### Trecho 8: Função blinkRedLED() – Controle Não Bloqueante do LED Vermelho (linhas 68 a 96)
 
-```
+```cpp
 inline void blinkRedLED(int onTime, int offTime)
 {
-  static unsigned long previousMillis = 0;
-  static int ledState = LOW;
-  unsigned long currentMillis = millis();
+static unsigned long previousMillis = 0;
+static int ledState = LOW;
+unsigned long currentMillis = millis();
 
-  if (previousMillis == 0)
-  {
-    digitalWrite(RED_LED, HIGH);
-    ledState = HIGH;
-    previousMillis = currentMillis;
-    return;
-  }
-
-  unsigned long elapsed = currentMillis - previousMillis;
-
-  if (ledState == HIGH && elapsed >= onTime)
-  {
-    digitalWrite(RED_LED, LOW);
-    ledState = LOW;
-    previousMillis = currentMillis;
-  }
-  else if (ledState == LOW && elapsed >= offTime)
-  {
-    digitalWrite(RED_LED, HIGH);
-    ledState = HIGH;
-    previousMillis = currentMillis;
-  }
+if (previousMillis == 0)
+{
+leds[0] = CRGB::Red;
+FastLED.show();
+ledState = HIGH;
+previousMillis = currentMillis;
+return;
 }
+unsigned long elapsed = currentMillis - previousMillis;
 
+if (ledState == HIGH && elapsed >= onTime)
+{
+FastLED.clear();
+FastLED.show();
+ledState = LOW;
+previousMillis = currentMillis;
+}
+else if (ledState == LOW && elapsed >= offTime)
+{
+leds[0] = CRGB::Red;
+FastLED.show();
+ledState = HIGH;
+previousMillis = currentMillis;
+}
+}
 ```
 
-Esta função é responsável por controlar o piscar do LED vermelho sem bloquear o loop principal:
+Esta função controla o piscar do LED vermelho sem bloquear o loop principal:
 
 - Declaração de Variáveis Estáticas:
-  previousMillis e ledState são declarados como estáticos, o que significa que eles mantêm seus valores entre chamadas da função. Essa estratégia é utilizada para rastrear o tempo desde a última mudança de estado e o estado atual do LED.
+  previousMillis e ledState mantêm seus valores entre chamadas para rastrear o tempo e estado do LED.
 
 - Uso da Função millis():
-  millis() retorna o tempo, em milissegundos, desde o início do programa. Ao utilizar essa função, a implementação evita o uso de funções de delay (como delay()), que bloqueiam o processamento e prejudicam a execução de outras tarefas.
+  millis() retorna o tempo em milissegundos desde o início do programa, permitindo temporizações não bloqueantes.
 
-- Implementação Não Bloqueante:
-  A lógica compara o tempo atual com o tempo armazenado para determinar se o LED deve ser alternado de estado. Dependendo do estado atual (ligado ou desligado) e do tempo decorrido (elapsed), a função alterna o LED e atualiza previousMillis.
+- Controle do NeoPixel:
+  Utiliza FastLED.show() para atualizar o hardware e FastLED.clear() para apagar o LED, substituindo as operações tradicionais de GPIO.
 
-- Vantagens:
-  Essa abordagem permite que o LED pisque de forma intermitente sem travar o sistema, mantendo a responsividade do firmware e permitindo que outras funções (como o escaneamento BLE) continuem executando de forma assíncrona.
+- Lógica de Alternância:
+  Alterna entre estados de cor vermelha e desligado baseado nos tempos de ativação (onTime) e desativação (offTime) fornecidos.
 
 ## Processo de desenvolvimento
 
@@ -293,6 +287,7 @@ Com os endereços "em mãos" e as ferramentas para escrita do código definidas,
 - **Arduino Framework ( [https://docs.arduino.cc/programming/](https://docs.arduino.cc/programming/) )**
 - **NimBLE-Arduino ( [https://github.com/h2zero/NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) )**
 - **C Programming Language( [https://devdocs.io/c/](https://devdocs.io/c/) )**
+- \*\*FastLED ( [https://github.com/FastLED/FastLED](https://github.com/FastLED/FastLED) )
 
 ### Outros
 
